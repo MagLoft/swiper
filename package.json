@@ -1,6 +1,6 @@
 {
   "name": "swiper-src",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "description": "Most modern mobile touch slider and framework with hardware accelerated transitions",
   "scripts": {
     "build:dev": "cross-env NODE_ENV=development gulp build",
@@ -11,6 +11,9 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "test": "npm run lint && npm run build:dev"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
