@@ -1,13 +1,13 @@
 /**
- * Swiper 5.2.2
+ * Swiper 5.2.3
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://swiperjs.com
  *
- * Copyright 2014-2019 Vladimir Kharlampidi
+ * Copyright 2014-2020 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: December 7, 2019
+ * Released on: January 3, 2020
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition as transition$1, on, off, trigger, transitionEnd as transitionEnd$1, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, filter, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -2724,14 +2724,20 @@ function getBreakpoint (breakpoints) {
   // Get breakpoint for window width
   if (!breakpoints) return undefined;
   let breakpoint = false;
-  const points = [];
-  Object.keys(breakpoints).forEach((point) => {
-    points.push(point);
+
+  const points = Object.keys(breakpoints).map((point) => {
+    if (typeof point === 'string' && point.startsWith('@')) {
+      const minRatio = parseFloat(point.substr(1));
+      const value = window.innerHeight * minRatio;
+      return { value, point };
+    }
+    return point;
   });
-  points.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+  points.sort((a, b) => parseInt(a.value, 10) - parseInt(b.value, 10));
   for (let i = 0; i < points.length; i += 1) {
-    const point = points[i];
-    if (point <= window.innerWidth) {
+    const { point, value } = points[i];
+    if (value <= window.innerWidth) {
       breakpoint = point;
     }
   }

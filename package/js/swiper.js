@@ -1,13 +1,13 @@
 /**
- * Swiper 5.2.2
+ * Swiper 5.2.3
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://swiperjs.com
  *
- * Copyright 2014-2019 Vladimir Kharlampidi
+ * Copyright 2014-2020 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: December 7, 2019
+ * Released on: January 3, 2020
  */
 
 (function (global, factory) {
@@ -3628,14 +3628,22 @@
     // Get breakpoint for window width
     if (!breakpoints) { return undefined; }
     var breakpoint = false;
-    var points = [];
-    Object.keys(breakpoints).forEach(function (point) {
-      points.push(point);
+
+    var points = Object.keys(breakpoints).map(function (point) {
+      if (typeof point === 'string' && point.startsWith('@')) {
+        var minRatio = parseFloat(point.substr(1));
+        var value = win.innerHeight * minRatio;
+        return { value: value, point: point };
+      }
+      return point;
     });
-    points.sort(function (a, b) { return parseInt(a, 10) - parseInt(b, 10); });
+
+    points.sort(function (a, b) { return parseInt(a.value, 10) - parseInt(b.value, 10); });
     for (var i = 0; i < points.length; i += 1) {
-      var point = points[i];
-      if (point <= win.innerWidth) {
+      var ref = points[i];
+      var point = ref.point;
+      var value = ref.value;
+      if (value <= win.innerWidth) {
         breakpoint = point;
       }
     }
